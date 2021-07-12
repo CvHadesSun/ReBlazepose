@@ -1,0 +1,73 @@
+#The config file for pose detection and pose estimation
+#@author:cvhadessun
+#date:2021-7-6-10:25
+
+#---------------#
+#|    config    |
+#---------------#
+
+root_dir: .
+data_dir: data
+model_dir: models
+PoseDetection:
+  - input:
+      - shape: [ 128,128,3 ]
+      - min: -1
+      - max: 1
+  - decode:
+      - num_classes: 1
+      - num_boxes: 895
+      - num_coords: 12
+      - box_coord_offset: 0
+      - keypoint_coord_offset: 4
+      - num_keypoints: 4
+      - num_values_per_keypoint: 2
+      - sigmoid_score: true
+      - score_clipping_thresh: 100.0
+      - reverse_output_order: true
+      - x_scale: 128.0
+      - y_scale: 128.0
+      - w_scale: 128.0
+      - h_scale: 128.0
+      - min_score_thresh: 0.5
+  - ssd_option:
+      - num_layers: 5
+      - min_scale: 0.1484375
+      - max_scale: 0.75
+      - input_size_width: 128
+      - input_size_height: 128
+      - anchor_offset_x: 0.5
+      - anchor_offset_y: 0.5
+      - strides: [ 8,16,32,32,32 ]
+      - aspect_ratios: 1.0
+      - reduce_boxes_in_lowest_layer: false
+      - interpolated_scale_aspect_ratio: 1.0
+      - fixed_anchor_size: true
+  - model: pose_detection.tflite
+  - ssd_anchor: anchors.npy
+
+
+
+Landmarks:
+  - input:
+      - shape: [ 256,256,3 ]
+      - min: 0
+      - max: 1
+  - model: pose_landmark_heavy.tflite
+  - heatmap: [ 64,64 ]
+  - num_landmark: 39
+  - refine_landmarks: true
+  - kernel_size: 7
+  - min_confidence_to_refine: 0.5
+  - refine_presence: false
+  - refine_visibility: false
+
+Tracking:
+  - target_angle: 90.0
+
+
+
+
+
+
+
