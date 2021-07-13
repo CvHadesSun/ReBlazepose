@@ -98,19 +98,26 @@ class PoseDetection:
         output_reg = self.model.get_tensor(self.output_details[0]['index'])
         output_cls = self.model.get_tensor(self.output_details[1]['index'])
 
+        #save outputs into the file
+        # np.save('./results/detection_model_output_reg.npy',output_reg)
+        # np.save('./results/detection_model_output_cls.npy', output_cls)
+
         detections = self._rawOutput2Detection(output_cls, output_reg)
+        # np.save('./results/_rawOutput2Detection_output.npy',detections[0].numpy())
 
         # Non-maximum suppression to remove overlapping detections:
         filtered_detections = []
         for i in range(len(detections)):
             faces = weighted_non_max_suppression(detections[i])
+            # np.save('./results/nms_output.npy',faces[0].numpy())
             faces = torch.stack(faces) if len(faces) > 0 else torch.zeros((0, 13))
             filtered_detections.append(faces.numpy())
         self.final_detection = filtered_detections
 
+
         # get Roi
         if self.final_detection[0].shape[0] == 0:
-            return ROI(0, 0, 0, 0, 0)
+            return ROI(0.5, 0.5, 1., 1., 0)
 
         roi = self._getROI(w, h)[0]  # in fact there is one roi
 
@@ -152,6 +159,7 @@ class PoseDetection:
         raw_box_tensor = torch.from_numpy(output_reg)
         raw_score_tensor = torch.from_numpy(output_cls)
         detection_boxes = self._decode_boxes(raw_box_tensor, self.anchors)
+        # np.save('./results/decode_box_output.npy',detection_boxes.numpy())
         raw_score_tensor = raw_score_tensor.clamp(-score_clipping_thresh, score_clipping_thresh)
         detection_scores = raw_score_tensor.sigmoid().squeeze(dim=-1)
         mask = detection_scores >= min_score_thresh

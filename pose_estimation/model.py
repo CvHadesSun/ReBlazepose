@@ -92,12 +92,18 @@ class BlazePose:
         self.model.set_tensor(self.input_details[0]['index'], input)
         self.model.invoke()
         self.coordinates = self.model.get_tensor(self.output_details[0]['index'])  # [index:497,[1,195]]
+        # np.save('./results/pose_model_coordinates.npy',self.coordinates)
         self.pose_flag = self.model.get_tensor(self.output_details[1]['index'])  # output_poseflag index:498 [1,1]
+        self.pose_flag = [[Sigmoid(self.pose_flag[0][0])]]
         self.output_segmentation = self.model.get_tensor(
             self.output_details[2]['index'])  # output_segmentation index:486 [1,128,128,1]
         self.output_heatmap = self.model.get_tensor(
             self.output_details[3]['index'])  # output_heatmap index:493 [1,64,64,39]
+        # np.save('./results/pose_model_heatmap.npy', self.output_heatmap)
         self.world_3d = self.model.get_tensor(self.output_details[4]['index'])  # world_3d index:499 [1,117]
+
+    def postLandmarks(self):
+
         # return self._heatmap2Coordinates()
         np_coordinates = np.squeeze(self.coordinates).reshape(-1, 5)
         norm_joints = np.zeros_like(np_coordinates)
@@ -110,10 +116,11 @@ class BlazePose:
         normed_landmarks = norm_joints
         if self.cfg['Landmarks'][4]['refine_landmarks']:
             normed_landmarks = self._refineLandmarkByHeatmap()
+            # np.save('./results/refine_landmarks.npy',normed_landmarks)
 
-        projected_landmarks = self.projectLandmarks(normed_landmarks, kwargs['roi'])
-        roi = self._getRoi(projected_landmarks, kwargs['img'].shape[1], kwargs['img'].shape[0])
-        return projected_landmarks, roi
+        # projected_landmarks = self.projectLandmarks(normed_landmarks, kwargs['roi'])
+        # roi = self._getRoi(projected_landmarks, kwargs['img'].shape[1], kwargs['img'].shape[0])
+        return norm_joints
 
     def _heatmap2Coordinates(self):
         new_coordinates = []
@@ -191,12 +198,16 @@ class BlazePose:
 
         return refine_coordinates
 
-    def _getRoi(self, normlandmarks, w, h):
-        hip_x = normlandmarks[33, 0] * w
-        hip_y = normlandmarks[33, 1] * h
+    def getRoi(self,hip, encode_full,w, h):
+
+
+        hip_x = hip[0] * w
+        hip_y = hip[1] * h
         #
-        encode_full_x = normlandmarks[34, 0] * w
-        encode_full_y = normlandmarks[34, 1] * h
+        encode_full_x = encode_full[0] * w
+        encode_full_y = encode_full[1] * h
+
+        # print(hip_x,hip_y,encode_full_x,encode_full_y)
 
         size_roi = 2 * (math.sqrt((hip_x - encode_full_x) ** 2 + (hip_y - encode_full_y) ** 2))
 
@@ -212,6 +223,8 @@ class BlazePose:
             new_norm_landmarks[i, :] = landmarkProjection(norm_landmarks[i], roi)
 
         return new_norm_landmarks
+
+
 
 # coordinates = interpreter.get_tensor(output_details[0]['index'])  #[index:497,[1,195]]
 # #

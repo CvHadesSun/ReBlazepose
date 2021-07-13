@@ -60,7 +60,8 @@ def getRoi(rect, input_width, input_height, is_norm):
 
 
 def PadRoi(input_width, input_height, keep_aspect_ratio, roi):
-    '''using roi to pad the input and get the padding box(letterbox)'''
+    '''using roi to pad the input and get the padding box(letterbox),roi is normalized,
+    @return normalized roi and normalized padding bbox,it is letterbox'''
     if keep_aspect_ratio:
         return roi, [0.0, 0.0, 0.0, 0.0]
     assert input_height > 0
@@ -70,8 +71,11 @@ def PadRoi(input_width, input_height, keep_aspect_ratio, roi):
 
     assert roi.width > 0
     assert roi.height > 0
+    # the normalized roi to no normalized roi
+    roi = getRoi(roi, input_width, input_height, True)
 
     roi_aspect_ratio = roi.height / roi.width
+    print(roi_aspect_ratio)
 
     vertical_padding = 0.0
     horizontal_padding = 0.0
@@ -91,7 +95,11 @@ def PadRoi(input_width, input_height, keep_aspect_ratio, roi):
     roi.height = new_height
 
     padding = [horizontal_padding, vertical_padding, horizontal_padding, vertical_padding]  # is normlized padding
-
+    # normalized
+    roi.set_x(roi.center_x / input_width)
+    roi.set_y(roi.center_y / input_height)
+    roi.set_width(roi.width / input_width)
+    roi.set_height(roi.height / input_height)
     return roi, padding
 
 
@@ -199,7 +207,6 @@ def ImageTransform(image, roi, output_size, range_):
     roi = getRoi(roi, image.shape[1], image.shape[0], True)
     # roi = TransformRect(roi)
 
-
     roi_xmin = roi.center_x - roi.width / 2
     roi_ymin = roi.center_y - roi.height / 2
     roi_xmax = roi.center_x + roi.width / 2
@@ -221,7 +228,7 @@ def ImageTransform(image, roi, output_size, range_):
 
     warped = cv2.warpPerspective(image, projection_matrix, (output_width, output_height),
                                  flags=cv2.INTER_LINEAR)  # padding zeros
-
+    # cv2.imwrite('./results/warped_roi.jpg',warped)
     # scale image value into dst range:[0,255]-->[range_[0],rang_[1]]
 
     assert len(range_) > 0
@@ -323,8 +330,8 @@ def TransformNormalizedRect(roi, input_width, input_height):
 
     x_shift = 0.
     y_shift = 0.
-    x_scale = 1.25
-    y_scale = 1.25
+    x_scale = 1.
+    y_scale = 1.
 
     if rot == 0.:
         roi.set_x(roi.center_x + w * x_shift)
@@ -393,6 +400,17 @@ def landmarkProjection(norm_landmark, roi):
 
     return [new_x, new_y, new_z, presence, visibilty]
 
+
+def landmarkToDetection(norm_landmarks):
+    '''to transform the normalized landmarks to the detection results'''
+
+    xmin = np.min(norm_landmarks[:33, 0])
+    xmax = np.max(norm_landmarks[:33, 0])
+    ymin = np.min(norm_landmarks[:33, 1])
+    ymax = np.max(norm_landmarks[:33, 1])
+
+    return [xmin,ymin,xmax-xmin,ymax-ymin]
+
 # r = ROI()
 # r.set_value(0.5, 0.5, 1, 1, 0)
 #
@@ -404,6 +422,3 @@ def landmarkProjection(norm_landmark, roi):
 #
 # new_rect = rotate_points(rect,center,90)
 # print(new_rect)
-
-
-

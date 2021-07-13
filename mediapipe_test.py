@@ -5,7 +5,7 @@ mp_pose = mp.solutions.pose
 
 # For static images:
 IMAGE_FILES = ['./data/0.jpg']
-cap = cv2.VideoCapture('./data/1623983605589_video_camera_CurtsyLungetoBalanceRight.mp4')
+cap = cv2.VideoCapture('./data/1_bodyweight_squats__tc__.webm')
 
 with mp_pose.Pose(
     static_image_mode=True,
@@ -33,6 +33,7 @@ with mp_pose.Pose(
           annotated_image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
       # cv2.imwrite('/tmp/annotated_image' + str(idx) + '.png', annotated_image)
       cv2.imshow('show',annotated_image)
+    # cv2.waitKey()
     if cv2.waitKey(1)==ord('q'):break
     # Plot pose world landmarks.
     # mp_drawing.plot_landmarks(

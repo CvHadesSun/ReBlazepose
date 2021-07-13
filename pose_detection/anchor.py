@@ -1,14 +1,14 @@
 import numpy as np
 
 anchor_options = {
-    "num_layers": 4,
+    "num_layers": 5,
     "min_scale": 0.1484375,
     "max_scale": 0.75,
-    "input_size_height": 128,
-    "input_size_width": 128,
+    "input_size_height": 224,
+    "input_size_width": 224,
     "anchor_offset_x": 0.5,
     "anchor_offset_y": 0.5,
-    "strides": [8, 16, 16, 16],
+    "strides": [8, 16, 32, 32,32],
     "aspect_ratios": [1.0],
     "reduce_boxes_in_lowest_layer": False,
     "interpolated_scale_aspect_ratio": 1.0,
@@ -94,5 +94,5 @@ def generate_anchors(options):
     return anchors
 
 anchors = generate_anchors(anchor_options)
-np.save("anchors.npy", anchors)
+np.save("./../models/anchors_224x224.npy", anchors)
 
