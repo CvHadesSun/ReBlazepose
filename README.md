@@ -22,7 +22,7 @@ In the demo.py file , there are single image and wecam demo, you should config y
 
 # Debug process
 
-- single image demo[funcDemo](file:///demo.py):
+- single image demo[funcDemo](demo.py):
     ```
     Code logic:
         1.Update the cfg file:update workspace root dir.
@@ -51,14 +51,14 @@ In the demo.py file , there are single image and wecam demo, you should config y
     
     
    - Detection:
-        -  [ssd anchor generator](file:///pose_detection/anchor.py):Generate the SSD anchors, The generated file:[anchors](file:///mdoels/anchor_224x224.npy)
+        -  [ssd anchor generator](pose_detection/anchor.py):Generate the SSD anchors, The generated file:[anchors](mdoels/anchor_224x224.npy)
      
         -  The tflite model ouput: 
-            - output_reg:[1,2254,12] ([reg](file:///results/detection_model_output_reg.npy))
-            - ouput_cls:[1,2254] ([cls](file:///results/detection_model_output_cls.npy))
-        -  [model(105)](file:///pose_detection/model.py): detction_model._rawOutput2Detection output:detections[list,length=1], [output data](file:///results/_rawOutput2Detection_output.npy)
-        -  [model(161)](file:///pose_detection/model.py): detection_model._decode_box: [output_data](file:///results/decode_box_output.npy)
-        -  [model(111)](file:///pose_detection/model.py): [NMS output](file:///results/nms_output.npy)
+            - output_reg:[1,2254,12] ([reg](results/detection_model_output_reg.npy))
+            - ouput_cls:[1,2254] ([cls](results/detection_model_output_cls.npy))
+        -  [model(105)](pose_detection/model.py): detction_model._rawOutput2Detection output:detections[list,length=1], [output data](results/_rawOutput2Detection_output.npy)
+        -  [model(161)](pose_detection/model.py): detection_model._decode_box: [output_data](results/decode_box_output.npy)
+        -  [model(111)](pose_detection/model.py): [NMS output](results/nms_output.npy)
         -  detection model output normalized roi: (detection_model._getROI())
             - center_x: 0.626997709274292
             - center_y: 0.5052854418754578
@@ -66,20 +66,20 @@ In the demo.py file , there are single image and wecam demo, you should config y
             - height: 0.938792378627553
             - rotation: 0.8602881017568764 (degree unit)
    - Landmarks:
-        -  [TransformNormalizedRect](file:///utils/img_process_tools.py): 
+        -  [TransformNormalizedRect](utils/img_process_tools.py): 
             - center_x: 0.626997709274292
             - center_y: 0.5052854418754578
             - width: 1.5138027105369294
             - height: 0.938792378627553
             - rotation: 0.8602881017568764
-        -  [ImageTransform](file:///utils/img_process_tools.py): 
+        -  [ImageTransform](utils/img_process_tools.py): 
             - warped image: 
             
             ![warped image](results/warped_roi.jpg)
             
-        -  [Pose model](file:///pose_estimation/model.py): [output_coordinates:(1,195)](file:///results/pose_model_coordinates.npy)
-        -  [Pose model](file:///pose_estimation/model.py): [output_heatmap:(1,64,64,39)](file:///results/pose_model_heatmap.npy)
-        -  [Pose model](file:///pose_estimation/model.py): [refine_landmarks:(39,5)](file:///results/refine_landmarks.npy)
-        -  [Pose model](file:///pose_estimation/model.py): [projected_landmarks:(39,5)](file:///results/projected_landmarks.npy)
+        -  [Pose model](pose_estimation/model.py): [output_coordinates:(1,195)](results/pose_model_coordinates.npy)
+        -  [Pose model](pose_estimation/model.py): [output_heatmap:(1,64,64,39)](results/pose_model_heatmap.npy)
+        -  [Pose model](pose_estimation/model.py): [refine_landmarks:(39,5)](results/refine_landmarks.npy)
+        -  [Pose model](pose_estimation/model.py): [projected_landmarks:(39,5)](results/projected_landmarks.npy)
             
         
