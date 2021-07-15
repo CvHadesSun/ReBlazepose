@@ -8,7 +8,7 @@ class LowPassFilter:
     '''
 
     def __init__(self, alpha, initialized=False):
-        self._SetAlpha(alpha)
+        self.alpha_ = alpha
         self.initialized_ = initialized
 
     def Apply(self, value):
@@ -45,7 +45,7 @@ class LowPassFilter:
 class RelativeVelocityFilter:
     '''referring to :mediapipe/mediapipe/util/filtering/relative_velocity_filter.cc(.h)'''
 
-    def __int__(self, window_size, velocity_scale, mode):
+    def __init__(self, window_size, velocity_scale, mode=0):
         self.max_window_size_ = window_size
         self.velocity_scale_ = velocity_scale
         self.last_value_ = 0.
@@ -56,17 +56,21 @@ class RelativeVelocityFilter:
         self.window_ = []
 
     def Apply(self, timestamp, value_scale, value):
-        new_timestamp = timestamp
-        assert self.last_timestamp_ >= new_timestamp
-        distance = 0
         kNanoSecondsToSecond = 1e-9
+        new_timestamp = timestamp / kNanoSecondsToSecond  #tranform int time to ns.
+        # print(new_timestamp)
+        assert self.last_timestamp_ <= new_timestamp
+        distance = 0
+
         kAssumedMaxDuration = 1000000000 / 30  # 1/30 per frame   unit:ns
+
+        alpha = 1.0
         if self.last_timestamp_ == -1:
             alpha = 1.0
         else:
-            if self.mode == 0:
+            if self.mode_ == 0:
                 distance = value * value_scale - self.last_value_ * self.last_value_scale_
-            elif self.mode == 1:
+            elif self.mode_ == 1:
                 distance = value_scale * (value - self.last_value_)
             else:
                 print('mode only is 0 or 1 !')
@@ -149,9 +153,8 @@ class OneEuroFilter:
     def _SetBeta(self, beta):
         self.beta_ = beta
 
-
     def _SetDerivateCutoff(self, derivate_cutoff):
-        assert derivate_cutoff>0,"derivate_cutoff should be > 0"
+        assert derivate_cutoff > 0, "derivate_cutoff should be > 0"
         self.derivate_cutoff_ = derivate_cutoff
 
 # a=[1,2,3,4]

@@ -65,6 +65,7 @@ def generate_anchors(options):
 
             last_same_stride_layer += 1
 
+        # print(aspect_ratios)
         for i in range(len(aspect_ratios)):
             ratio_sqrts = np.sqrt(aspect_ratios[i])
             anchor_height.append(scales[i] / ratio_sqrts)
@@ -73,6 +74,7 @@ def generate_anchors(options):
         stride = options["strides"][layer_id]
         feature_map_height = int(np.ceil(options["input_size_height"] / stride))
         feature_map_width = int(np.ceil(options["input_size_width"] / stride))
+
 
         for y in range(feature_map_height):
             for x in range(feature_map_width):

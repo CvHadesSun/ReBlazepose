@@ -1,0 +1,14 @@
+workspace(name = "com_google_absl_hello_world")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# Abseil
+http_archive(
+    name = "absl",
+    strip_prefix = "abseil-cpp-20200923",
+    urls = ["https://github.com/abseil/abseil-cpp/archive/20200923.tar.gz"],
+    sha256 = "b3744a4f7a249d5eaf2309daad597631ce77ea62e0fc6abffbab4b4c3dc0fc08"
+)
+
+
+
