@@ -101,6 +101,32 @@ Landmarks:
 Tracking:
   - target_angle: 90.0
 
+Filter:
+  - Visbility_filter:
+      - filter_name: visibility_filter
+      - parameters:
+          - alpha: 0.1
+  - Aux_landmark_filter:
+      - filter_name: one_euro_filter
+      - parameters:
+          - frequency: 30.0
+          - min_cutoff: 0.01
+          - beta: 10.0
+          - derivate_cutoff: 1.0
+          - min_allowed_object_scale: 0.000001
+          - disable_value_scaling: false
+  - Landmark_filter:
+      - filter_name: visibility_filter
+      - parameters:
+          - alpha: 0.1
+      - filter_name: one_euro_filter
+      - parameters:
+          - frequency: 30.0
+          - min_cutoff: 0.05
+          - beta: 80.0
+          - derivate_cutoff: 1.0
+          - min_allowed_object_scale: 0.000001
+          - disable_value_scaling: false
 
 
 

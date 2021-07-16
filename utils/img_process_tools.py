@@ -262,6 +262,7 @@ def computRotation(center, point, target_angle_):
      mediapipe/calculators/util/detections_to_rects_calculators.cc
     mediapipe/calculators/util/detections_to_rects_calculators.h
     '''
+
     target_angle_ = target_angle_ * math.pi / 180.0
     vertical_dist = point[1] - center[1]
     horizontial_dist = point[0] - center[0]
@@ -330,8 +331,8 @@ def TransformNormalizedRect(roi, input_width, input_height):
 
     x_shift = 0.
     y_shift = 0.
-    x_scale = 1.
-    y_scale = 1.
+    x_scale = 1.25
+    y_scale = 1.25
 
     if rot == 0.:
         roi.set_x(roi.center_x + w * x_shift)

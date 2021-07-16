@@ -94,7 +94,7 @@ class BlazePose:
         self.coordinates = self.model.get_tensor(self.output_details[0]['index'])  # [index:497,[1,195]]
         # np.save('./results/pose_model_coordinates.npy',self.coordinates)
         self.pose_flag = self.model.get_tensor(self.output_details[1]['index'])  # output_poseflag index:498 [1,1]
-        self.pose_flag = [[Sigmoid(self.pose_flag[0][0])]]
+        # self.pose_flag = [[Sigmoid(self.pose_flag[0][0])]]
         self.output_segmentation = self.model.get_tensor(
             self.output_details[2]['index'])  # output_segmentation index:486 [1,128,128,1]
         self.output_heatmap = self.model.get_tensor(

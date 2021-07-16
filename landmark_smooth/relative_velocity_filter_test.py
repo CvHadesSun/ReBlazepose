@@ -34,7 +34,7 @@ res1 = filter1.Apply(2 / kms, value_scale, value)
 res2 = filter2.Apply(2 / kms, value_scale, value)
 
 print(res1, res2)
-
+#
 value = 2.0
 res1 = filter1.Apply(3 / kms, value_scale, value)
 res2 = filter2.Apply(3 / kms, value_scale, value)
