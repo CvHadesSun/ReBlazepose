@@ -27,7 +27,7 @@ def webCamDemo():
     detection_model = PoseDetection(cfg)
 
     # cap = cv2.VideoCapture('./data/1_bodyweight_squats__tc__.webm')
-    cap = cv2.VideoCapture('./data/1623983605589_video_camera_CurtsyLungetoBalanceRight.mp4')
+    # cap = cv2.VideoCapture('./data/1623983605589_video_camera_CurtsyLungetoBalanceRight.mp4')
     # cap = cv2.VideoCapture('./data/1623983453547_video_camera_PushUps.mp4')
     window_name = 'blazepose'
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)

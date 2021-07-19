@@ -83,3 +83,43 @@ In the demo.py file , there are single image and wecam demo, you should config y
         -  [Pose model](pose_estimation/model.py): [projected_landmarks:(39,5)](results/projected_landmarks.npy)
             
         
+- Video detection-tracking demo[webCamDemo](demo.py):
+    - code logic:
+    ![tracking demo](data/tracking_demo.png)
+      
+    - Several filters need to implement
+        - [low pass filter implementation](landmark_smooth/filter.py)
+        - [one euro filter implementation](landmark_smooth/filter.py)
+        - [landmark_smooth_calculator](landmark_smooth/landmark_smooth_calculator.py)
+        - [visiblity_smooth_calculator](landmark_smooth/visiblity_smooth_calculator.py)
+    - landmarks filter is: low pass filter and one euro filter combination：
+    ```
+        landmarks+norm_roi+input_width+input_height
+                            |
+                            V
+                      LowPassfilter
+                            |
+                            V
+                  OneEuroOneEuroFilterImpl
+                            |
+                            V
+                    filtered landmarks
+
+    ```
+    - Aux_landmarks(to find the ROI) filter is: low pass filter and one euro filter combination：
+    ```
+        aux_landmarks+norm_roi+input_width+input_height
+                            |
+                            V
+                      LowPassfilter
+                            |
+                            V
+                  OneEuroOneEuroFilterImpl
+                            |
+                            V
+                  filtered aux_ landmarks
+
+    ```
+    - Two class landmarks filter config are different, and their config parameters are [config](config/config.yaml)
+    - The mediapipe filter computation fig:![mediapipe](doc/pose_landmark_filtering)
+    
